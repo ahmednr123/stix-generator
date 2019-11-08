@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class StixObjectIDHandler {
+class StixObjectManager {
 
     static void
     execute (ArrayList<IdentifiedStixObject> objects)
@@ -74,6 +74,7 @@ class StixObjectIDHandler {
                     if (originalSighting != null) {
                         System.out.println("FOUND PREV SIGHTING");
                         ID = originalSighting.getId();
+                        StixObjectUpdater.updateSighting(originalSighting, sighting);
                     } else {
                         StixObjectHandler.getInstance().set(ID, object);
                     }

@@ -70,8 +70,7 @@ public abstract class StixStrategy {
     Bundle bundle () {
         for (String log : Logs) {
             ArrayList<IdentifiedStixObject> stixObjects = processLog(log);
-            StixObjectIDHandler.execute(stixObjects);
-            StixObjectUpdateHandler.execute(stixObjects);
+            StixObjectManager.execute(stixObjects);
         }
 
         stixObjects = StixObjectHandler.getInstance().getAll();

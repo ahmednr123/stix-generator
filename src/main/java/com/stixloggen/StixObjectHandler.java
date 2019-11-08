@@ -2,11 +2,9 @@ package com.stixloggen;
 
 import eu.csaware.stix2.common.IdentifiedStixObject;
 import eu.csaware.stix2.common.Stix2Type;
-import eu.csaware.stix2.common.TypedStixObject;
 import eu.csaware.stix2.sdos.Identity;
 import eu.csaware.stix2.sdos.Indicator;
 import eu.csaware.stix2.sros.Sighting;
-import eu.csaware.stix2.util.Stix2Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
