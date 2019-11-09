@@ -5,18 +5,17 @@ import eu.csaware.stix2.sros.Sighting;
 import java.util.List;
 
 class StixObjectUpdater {
-
     static void updateSighting (Sighting originalSighting, Sighting newSighting) {
-        originalSighting.setLastSeen(newSighting.getLastSeen());
+        newSighting.setId(originalSighting.getId());
+        newSighting.setLastSeen(originalSighting.getLastSeen());
 
-        Integer count = originalSighting.getCount() + newSighting.getCount();
-        originalSighting.setCount(count);
+        Integer count = newSighting.getCount() + originalSighting.getCount();
+        newSighting.setCount(count);
 
-        List<String> sightedAt = originalSighting.getWhereSightedRefs();
-        sightedAt.addAll(newSighting.getWhereSightedRefs());
-        originalSighting.setWhereSightedRefs(sightedAt);
+        List<String> sightedAt = newSighting.getWhereSightedRefs();
+        sightedAt.addAll(originalSighting.getWhereSightedRefs());
+        newSighting.setWhereSightedRefs(sightedAt);
 
-        originalSighting.setModified(newSighting.getModified());
+        newSighting.setModified(originalSighting.getModified());
     }
-
 }

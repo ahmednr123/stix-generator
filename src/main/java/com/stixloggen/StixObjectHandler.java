@@ -5,11 +5,14 @@ import eu.csaware.stix2.common.Stix2Type;
 import eu.csaware.stix2.sdos.Identity;
 import eu.csaware.stix2.sdos.Indicator;
 import eu.csaware.stix2.sros.Sighting;
+import eu.csaware.stix2.util.Stix2Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class StixObjectHandler {
+    private static Logger LOGGER = Logger.getLogger(StixObjectHandler.class.getName());
 
     private static StixObjectHandler instance;
 
@@ -40,7 +43,14 @@ public class StixObjectHandler {
     }
 
     public void set (String ID, IdentifiedStixObject stixObject) {
+        LOGGER.info("Setting ID=" + ID + " with " + Stix2Gson.PRODUCTION.toJson(stixObject));
         mappedObjects.put(ID, stixObject);
+    }
+
+    public void pushAll (ArrayList<IdentifiedStixObject> stixObjects) {
+        for (IdentifiedStixObject object : stixObjects) {
+            mappedObjects.put(object.getId(), object);
+        }
     }
 
     public IdentifiedStixObject find (Stix2Type objType, String data) {
@@ -50,28 +60,31 @@ public class StixObjectHandler {
             switch (object.getType()) {
                 case IDENTITY:
                     Identity identity = (Identity) object;
-                    System.out.println("\tType: IDENTITY, Data: " + identity.getName());
-                    if (identity.getName().equals(data))
+                    if (identity.getName().equals(data)) {
+                        LOGGER.info("Found " + identity.getId());
                         return identity;
+                    }
                     break;
                 case INDICATOR:
                     Indicator indicator = (Indicator) object;
-                    System.out.println("\tType: INDICATOR, Data: " + indicator.getPattern());
-                    if (indicator.getPattern().equals(data))
+                    if (indicator.getPattern().equals(data)) {
+                        LOGGER.info("Found " + indicator.getId());
                         return indicator;
+                    }
                     break;
                 case SIGHTING:
                     Sighting sighting = (Sighting) object;
-                    System.out.println("\tType: SIGHTING, Data: " + sighting.getSightingOfRef());
-                    if (sighting.getSightingOfRef().equals(data))
+                    if (sighting.getSightingOfRef().equals(data)) {
+                        LOGGER.info("Found " + sighting.getId());
                         return sighting;
+                    }
                     break;
                 default:
                     throw new RuntimeException("Finder doesn't support type: " + objType);
             }
         }
 
-        System.out.println("NOT FOUND");
+        LOGGER.info("Object[type="+objType+"] with data=" + data + " not found");
         return null;
     }
 }

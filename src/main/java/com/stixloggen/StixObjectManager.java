@@ -17,78 +17,90 @@ class StixObjectManager {
     {
         IDHandler idHandler = new IDHandler();
 
+        updateObjectIDs(objects, idHandler);
+
+        StixObjectHandler.getInstance().pushAll(objects);
+        idHandler.clear();
+    }
+
+    /**
+     * This method gets IDs of objects that may already be present
+     * in the StixObjectPool. If incase the object is not present. It
+     * generates new IDs for the objects.
+     *
+     * The IDHandler keeps track of which temporary ID was set to what
+     * new ID. Which will be used while updating references within
+     * the objects.
+     *
+     * @param objects
+     * @param idHandler
+     */
+    private static void
+    updateObjectIDs (ArrayList<IdentifiedStixObject> objects, IDHandler idHandler)
+    {
         for (IdentifiedStixObject object : objects) {
-            String ID = generateID(object.getType());
-            switch (object.getType()) {
-                case IDENTITY:
-                    Identity identity =
-                            (Identity)
-                                StixObjectHandler.getInstance()
-                                    .find(Stix2Type.IDENTITY, ((Identity)object).getName());
-                    if (identity != null) {
-                        System.out.println("FOUND PREV IDENTITY");
-                        ID = identity.getId();
-                    } else {
-                        StixObjectHandler.getInstance().set(ID, object);
-                    }
-                    break;
-
-                case INDICATOR:
-                    Indicator indicator =
-                            (Indicator)
-                                StixObjectHandler.getInstance()
-                                    .find(Stix2Type.INDICATOR, ((Indicator)object).getPattern());
-                    if (indicator != null) {
-                        System.out.println("FOUND PREV INDICATOR");
-                        ID = indicator.getId();
-                    } else {
-                        StixObjectHandler.getInstance().set(ID, object);
-                    }
-                    break;
-                case SIGHTING:
-                    Sighting sighting = (Sighting) object;
-                    String tempSightingRef = sighting.getSightingOfRef();
-                    String sightingOfRef = idHandler.get(tempSightingRef);
-                    if (sightingOfRef == null) {
-                        idHandler.attach(tempSightingRef, sighting::setSightingOfRef);
-                    } else {
-                        sighting.setSightingOfRef(sightingOfRef);
-                    }
-
-                    List<String> sightingAtRefs = sighting.getWhereSightedRefs();
-                    String tempSightingAtRef = sightingAtRefs.get(0);
-                    String sightingAtRef = idHandler.get(tempSightingAtRef);
-                    if (sightingAtRef == null) {
-                        idHandler.attach(tempSightingAtRef, (newID) -> {
-                            sightingAtRefs.set(0, newID);
-                        });
-                    } else {
-                        sightingAtRefs.set(0, sightingAtRef);
-                    }
-
-                    Sighting originalSighting =
-                            (Sighting)
-                                StixObjectHandler.getInstance()
-                                    .find(Stix2Type.SIGHTING, sighting.getSightingOfRef());
-
-                    if (originalSighting != null) {
-                        System.out.println("FOUND PREV SIGHTING");
-                        ID = originalSighting.getId();
-                        StixObjectUpdater.updateSighting(originalSighting, sighting);
-                    } else {
-                        StixObjectHandler.getInstance().set(ID, object);
-                    }
-                    break;
-            }
-
+            String ID = getObjectID(object, generateID(object.getType()));
             idHandler.set(object.getId(), ID);
             object.setId(ID);
         }
 
-        idHandler.clear();
+        updateObjectReferences(objects, idHandler);
     }
 
-    private static String generateID (Stix2Type objType) {
+    private static void
+    updateObjectReferences (ArrayList<IdentifiedStixObject> objects, IDHandler idHandler)
+    {
+        for (IdentifiedStixObject object : objects) {
+            if (object.getType() == Stix2Type.SIGHTING) {
+                Sighting sighting = (Sighting) object;
+                String tempSightingRef = sighting.getSightingOfRef();
+                String sightingOfRef = idHandler.get(tempSightingRef);
+                sighting.setSightingOfRef(sightingOfRef);
+
+                List<String> sightingAtRefs = sighting.getWhereSightedRefs();
+                String tempSightingAtRef = sightingAtRefs.get(0);
+                String sightingAtRef = idHandler.get(tempSightingAtRef);
+                sightingAtRefs.set(0, sightingAtRef);
+
+                Sighting originalSighting = (Sighting) StixObjectHandler.getInstance().find(Stix2Type.SIGHTING, sighting.getSightingOfRef());
+                if (originalSighting != null) {
+                    StixObjectUpdater.updateSighting(originalSighting, sighting);
+                }
+            }
+        }
+    }
+
+    private static
+    String getObjectID (IdentifiedStixObject object, String generatedID)
+    {
+        String data;
+        switch (object.getType()) {
+            case IDENTITY:
+                data = ((Identity)object).getName();
+                break;
+            case INDICATOR:
+                data = ((Indicator)object).getPattern();
+                break;
+            case SIGHTING:
+                data = ((Sighting)object).getSightingOfRef();
+                break;
+            default:
+                throw new RuntimeException("The object type: " + object.getType() + " is not supported yet");
+        }
+
+        IdentifiedStixObject originalObject =
+                        StixObjectHandler.getInstance().find(object.getType(), data);
+
+        if (originalObject != null) {
+            generatedID = originalObject.getId();
+        }
+
+        return generatedID;
+    }
+
+    private static
+    String generateID (Stix2Type objType)
+    {
         String type = objType.toString();
         return (type + "--" + UUID.randomUUID().toString());
     }

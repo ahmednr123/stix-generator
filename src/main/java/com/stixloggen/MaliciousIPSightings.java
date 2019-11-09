@@ -58,6 +58,7 @@ public class MaliciousIPSightings extends StixStrategy {
             Sighting sighting = (Sighting) createStixObject(Stix2Type.SIGHTING, dateTime);
             sighting.setCount(1);
             sighting.setSightingOfRef(indicator.getId());
+            sighting.setLastSeen(dateTime);
             ArrayList<String> sightedByRefs = new ArrayList<>();
             sightedByRefs.add(identity.getId());
             sighting.setWhereSightedRefs(sightedByRefs);
