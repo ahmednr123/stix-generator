@@ -1,0 +1,9 @@
+{
+    "type": "relationship",
+    "id": "relationship--6ce78886-1027-4800-9301-40c274fd472f",
+    "created": "2014-06-30T09:15:17.182Z",
+    "modified": "2014-06-30T09:15:17.182Z",
+    "relationship_type": "indicates",
+    "source_ref": "indicator--2466587a-d43f-4c4d-a166-151ed0f05e67",
+    "target_ref": "malware--162d917e-766f-4611-b5d6-652791454fca"
+}

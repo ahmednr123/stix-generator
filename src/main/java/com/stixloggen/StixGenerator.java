@@ -11,8 +11,9 @@ import java.util.ArrayList;
 public class StixGenerator {
     private StixStrategy stixStrategy;
 
-    public StixGenerator (ArrayList<String> Logs) {
-        this.stixStrategy = new MaliciousIPSightings(Logs);
+    public StixGenerator (ArrayList<String> Logs, String serverName) {
+        StixObjectHandler.getInstance();
+        this.stixStrategy = new MaliciousSightings(Logs, serverName);
     }
 
     public void saveBundleToFile (File file) {

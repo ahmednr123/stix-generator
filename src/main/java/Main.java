@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main (String[] args) throws IOException {
         BufferedReader bufferedReader =
-                new BufferedReader(new FileReader("C:\\Users\\inc-611\\Downloads\\Send-Archive\\logs.txt"));
+                new BufferedReader(new FileReader("C:\\Users\\inc-611\\Downloads\\Send-Archive\\new-logs.txt"));
 
         String line;
         ArrayList<String> Logs = new ArrayList<>();
@@ -17,7 +17,7 @@ public class Main {
             Logs.add(line);
         }
 
-        StixGenerator stixGenerator = new StixGenerator(Logs);
-        stixGenerator.saveBundleToFile(new File("C:\\Users\\inc-611\\Downloads\\Send-Archive\\bundle-test-2.json"));
+        StixGenerator stixGenerator = new StixGenerator(Logs, "Server 2645");
+        stixGenerator.saveBundleToFile(new File("C:\\Users\\inc-611\\Downloads\\Send-Archive\\bundle-test-xx.json"));
     }
 }
