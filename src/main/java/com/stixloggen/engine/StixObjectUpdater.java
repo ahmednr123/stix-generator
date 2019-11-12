@@ -1,4 +1,4 @@
-package com.stixloggen;
+package com.stixloggen.engine;
 
 import eu.csaware.stix2.sros.Sighting;
 

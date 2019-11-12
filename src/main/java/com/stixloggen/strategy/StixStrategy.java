@@ -1,5 +1,7 @@
-package com.stixloggen;
+package com.stixloggen.strategy;
 
+import com.stixloggen.engine.StixObjectHandler;
+import com.stixloggen.engine.StixObjectManager;
 import eu.csaware.stix2.common.Bundle;
 import eu.csaware.stix2.common.IdentifiedStixObject;
 import eu.csaware.stix2.common.Stix2Type;
@@ -23,7 +25,7 @@ public abstract class StixStrategy {
         this.Logs = Logs;
     }
 
-    abstract Identity extractIdentity (String log);
+    protected abstract Identity extractIdentity (String log);
     abstract LocalDateTime extractDateTime (String log);
 
     ArrayList<IdentifiedStixObject> processLog (String log) {
@@ -119,7 +121,7 @@ public abstract class StixStrategy {
         return object;
     }
 
-    Bundle bundle () {
+    public Bundle bundle () {
         for (String log : Logs) {
             ArrayList<IdentifiedStixObject> stixObjects = processLog(log);
             StixObjectManager.execute(stixObjects);

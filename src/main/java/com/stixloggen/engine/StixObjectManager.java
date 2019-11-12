@@ -1,4 +1,4 @@
-package com.stixloggen;
+package com.stixloggen.engine;
 
 import eu.csaware.stix2.common.IdentifiedStixObject;
 import eu.csaware.stix2.common.Stix2Type;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class StixObjectManager {
+public class StixObjectManager {
 
-    static void
+    public static void
     execute (ArrayList<IdentifiedStixObject> objects)
     {
         IDHandler idHandler = new IDHandler();

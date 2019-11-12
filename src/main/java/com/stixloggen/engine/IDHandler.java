@@ -1,4 +1,4 @@
-package com.stixloggen;
+package com.stixloggen.engine;
 
 import java.util.ArrayList;
 import java.util.HashMap;

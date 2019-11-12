@@ -1,5 +1,8 @@
 package com.stixloggen;
 
+import com.stixloggen.engine.StixObjectHandler;
+import com.stixloggen.strategy.MaliciousSightings;
+import com.stixloggen.strategy.StixStrategy;
 import eu.csaware.stix2.common.Bundle;
 import eu.csaware.stix2.util.Stix2Gson;
 

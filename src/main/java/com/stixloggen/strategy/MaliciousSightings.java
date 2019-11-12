@@ -1,4 +1,4 @@
-package com.stixloggen;
+package com.stixloggen.strategy;
 
 import eu.csaware.stix2.common.Stix2Type;
 import eu.csaware.stix2.sdos.Identity;
@@ -34,7 +34,7 @@ public class MaliciousSightings extends StixStrategy {
     }
 
     @Override
-    Identity extractIdentity(String log) {
+    protected Identity extractIdentity(String log) {
         Pattern ip_pattern = Pattern.compile("192.168.(?:\\d{1,3}\\.){1}\\d{1,3}");
         Matcher ip_matcher = ip_pattern.matcher(log);
 
